@@ -65,6 +65,7 @@
       <details class="disclosure">
         <summary>Qué puede decir esta consulta</summary>
         <p>Se analiza la respuesta HTTP informada por HackerTarget para buscar una versión de PHP declarada. La consulta DNS previa usa Cloudflare. El proveedor puede seguir redirecciones; si informa un cambio de dominio o de HTTPS a HTTP, el resultado queda indeterminado. Si la versión está oculta, hay respuestas contradictorias o la información no alcanza, el resultado será “No se pudo determinar”. Una versión antigua puede tener correcciones aplicadas por su proveedor; una cabecera también puede ser inexacta.</p>
+        <p>Cuando las cabeceras públicas muestran señales de un WAF o CDN conocido (por ejemplo Cloudflare, Akamai, Sucuri, Imperva/Incapsula, Amazon CloudFront, Fastly o Azure Front Door), el resultado lo marca como evidencia adicional. En esos dominios, la información observada puede reflejar ese borde de red y no el servidor de origen; confirmá el estado real directamente en el servidor que ejecuta la aplicación.</p>
         <p>El aviso de PHP del 21 de octubre de 2026 establece las correcciones en las ramas 8.2.35, 8.3.36, 8.4.27 y 8.5.12. Confirmar la protección exige revisar el PHP que realmente atiende las solicitudes y los parches del proveedor.</p>
       </details>
     </main>

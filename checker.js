@@ -3,6 +3,10 @@ export const FIXED_PATCHES = Object.freeze({'8.2':35,'8.3':36,'8.4':27,'8.5':12}
 const RESERVED_ENDINGS = /\.(?:localhost|local|internal|intranet|lan|home|arpa|invalid|test|onion)$/i;
 const REDIRECTS = new Set([301,302,303,307,308]);
 const MAX_BYTES = 65536;
+/** Cabeceras públicas que delatan de forma fiable un WAF/CDN conocido delante del origen. */
+const EDGE_HEADER_PROVIDERS = Object.freeze({'cf-ray':'Cloudflare','cf-cache-status':'Cloudflare','x-sucuri-id':'Sucuri','x-sucuri-cache':'Sucuri','x-iinfo':'Imperva/Incapsula','x-amz-cf-id':'Amazon CloudFront','x-akamai-transformed':'Akamai','x-azure-ref':'Azure Front Door'});
+const SERVER_EDGE_SIGNATURES = Object.freeze([[/cloudflare/i,'Cloudflare'],[/akamaighost/i,'Akamai'],[/sucuri/i,'Sucuri'],[/imperva|incapsula/i,'Imperva/Incapsula'],[/cloudfront/i,'Amazon CloudFront'],[/\bfastly\b/i,'Fastly']]);
+const CAPTURED_HEADERS = new Set(['server','x-powered-by','location',...Object.keys(EDGE_HEADER_PROVIDERS)]);
 export class InputError extends Error {}
 export class ProviderError extends Error {}
 
@@ -80,7 +84,7 @@ export function parseHeaderBlocks(raw) {
     const field = /^([!#$%&'*+.^_`|~0-9a-z-]+):[ \t]*(.*)$/i.exec(line);
     if (!field || line.length > 8192) { current.malformed = true; continue; }
     const name = field[1].toLowerCase();
-    if (['server','x-powered-by','location'].includes(name)) {
+    if (CAPTURED_HEADERS.has(name)) {
       current.headers[name] ||= [];
       current.headers[name].push(field[2].slice(0,4096));
       if (current.headers[name].length > 12) current.malformed = true;
@@ -96,8 +100,22 @@ export function parseHeaderBlocks(raw) {
   return useful;
 }
 
-function unknown(domain,summary,evidence=[],httpStatus=null,phpVersion=null) {
-  return {status:'indeterminate',domain,checkedAt:new Date().toISOString(),verdict:'No se pudo determinar',summary,evidence,phpVersion,httpStatus,url:'https://' + domain + '/',recommendation:'Confirmá con la administración del servidor qué paquete de PHP atiende este dominio y si incorpora las correcciones de ambas CVE. La ausencia de una versión pública no demuestra protección.'};
+/** Proveedores de WAF/CDN conocidos cuyas cabeceras públicas aparecen en algún bloque de la cadena. */
+function edgeProvidersFrom(blocks) {
+  const providers = new Set();
+  for (const block of blocks) {
+    for (const [name,label] of Object.entries(EDGE_HEADER_PROVIDERS)) if ((block.headers[name] || []).length) providers.add(label);
+    for (const value of block.headers.server || []) for (const [regex,label] of SERVER_EDGE_SIGNATURES) if (regex.test(value)) providers.add(label);
+  }
+  return [...providers].sort();
+}
+
+function edgeCaveat(edgeProviders) {
+  return edgeProviders.length ? ` El camino de red observado muestra señales de ${edgeProviders.join(', ')}; la respuesta pública puede reflejar ese borde y no el servidor de origen. Confirmá la versión real desde el propio servidor cuando haya un WAF o CDN delante.` : '';
+}
+
+function unknown(domain,summary,evidence=[],httpStatus=null,phpVersion=null,edgeProviders=[]) {
+  return {status:'indeterminate',domain,checkedAt:new Date().toISOString(),verdict:'No se pudo determinar',summary,evidence,phpVersion,httpStatus,url:'https://' + domain + '/',recommendation:'Confirmá con la administración del servidor qué paquete de PHP atiende este dominio y si incorpora las correcciones de ambas CVE. La ausencia de una versión pública no demuestra protección.' + edgeCaveat(edgeProviders)};
 }
 
 /** The provider already follows redirects. We assess their scope; we cannot stop them retroactively. */
@@ -105,36 +123,39 @@ export function assessHeaders(domainInput, raw, initialEvidence=[]) {
   const domain = normalizeDomain(domainInput);
   const blocks = parseHeaderBlocks(raw);
   const final = blocks.at(-1);
+  const edgeProviders = edgeProvidersFrom(blocks);
   const evidence = [...initialEvidence,'Cabeceras públicas observadas a través de HackerTarget.',`La respuesta final informada por el proveedor fue HTTP ${final.status}.`];
+  if (edgeProviders.length) evidence.push(`Se observaron cabeceras asociadas a ${edgeProviders.join(', ')} en el camino de red; la respuesta pública puede corresponder a ese borde y no al servidor de origen.`);
   let current = new URL('https://' + domain + '/');
   for (let i=0;i<blocks.length;i++) {
     const block = blocks[i];
-    if (block.malformed) return unknown(domain,'El proveedor devolvió cabeceras incompletas o ambiguas; no se puede evaluar una versión con certeza.',evidence,final.status);
+    if (block.malformed) return unknown(domain,'El proveedor devolvió cabeceras incompletas o ambiguas; no se puede evaluar una versión con certeza.',evidence,final.status,null,edgeProviders);
     if (REDIRECTS.has(block.status)) {
       const locations = block.headers.location || [];
-      if (locations.length !== 1 || i === blocks.length-1) return unknown(domain,'La cadena de redirecciones informada no permite establecer una respuesta final dentro del dominio consultado.',evidence,final.status);
+      if (locations.length !== 1 || i === blocks.length-1) return unknown(domain,'La cadena de redirecciones informada no permite establecer una respuesta final dentro del dominio consultado.',evidence,final.status,null,edgeProviders);
       let next;
-      try { next = new URL(locations[0],current); } catch { return unknown(domain,'No se pudo interpretar una redirección informada por el proveedor.',evidence,final.status); }
-      if (next.protocol !== 'https:' || next.hostname.toLowerCase().replace(/\.$/,'') !== domain || next.username || next.password || next.port) return unknown(domain,'El proveedor informó una redirección fuera del dominio HTTPS consultado. Sus resultados no permiten concluir el estado de este dominio.',evidence,final.status);
+      try { next = new URL(locations[0],current); } catch { return unknown(domain,'No se pudo interpretar una redirección informada por el proveedor.',evidence,final.status,null,edgeProviders); }
+      if (next.protocol !== 'https:' || next.hostname.toLowerCase().replace(/\.$/,'') !== domain || next.username || next.password || next.port) return unknown(domain,'El proveedor informó una redirección fuera del dominio HTTPS consultado. Sus resultados no permiten concluir el estado de este dominio.',evidence,final.status,null,edgeProviders);
       current = next;
-    } else if (i !== blocks.length-1) return unknown(domain,'El proveedor devolvió varias respuestas finales y no permite atribuir una versión única al dominio.',evidence,final.status);
+    } else if (i !== blocks.length-1) return unknown(domain,'El proveedor devolvió varias respuestas finales y no permite atribuir una versión única al dominio.',evidence,final.status,null,edgeProviders);
   }
-  if (final.status < 200 || final.status >= 300) return unknown(domain,'La respuesta final informada no fue exitosa. Puede corresponder a un bloqueo, un error o un sitio que no responde normalmente.',evidence,final.status);
+  if (final.status < 200 || final.status >= 300) return unknown(domain,'La respuesta final informada no fue exitosa. Puede corresponder a un bloqueo, un error o un sitio que no responde normalmente.',evidence,final.status,null,edgeProviders);
   if (blocks.length > 1) evidence.push(`El proveedor informó ${blocks.length-1} redirecciones HTTPS dentro del mismo dominio.`);
   const observations = blocks.map(versionsFrom);
   const allVersions = [...new Set(observations.flatMap(item => item.versions))];
   const observed = observations.at(-1);
-  if (allVersions.length > 1 || observations.some(item => item.nonStable)) return unknown(domain,'Las cabeceras informadas contienen versiones contradictorias, incompletas o preliminares de PHP.',evidence,final.status);
-  if (observed.versions.length !== 1) return unknown(domain,'La respuesta final no declara una versión exacta de PHP. El sitio puede ocultarla o utilizar otra tecnología.',evidence,final.status);
+  if (allVersions.length > 1 || observations.some(item => item.nonStable)) return unknown(domain,'Las cabeceras informadas contienen versiones contradictorias, incompletas o preliminares de PHP.',evidence,final.status,null,edgeProviders);
+  if (observed.versions.length !== 1) return unknown(domain,'La respuesta final no declara una versión exacta de PHP. El sitio puede ocultarla o utilizar otra tecnología.',evidence,final.status,null,edgeProviders);
   const version = observed.versions[0];
   evidence.push(`La respuesta final declara PHP ${version} en Server o X-Powered-By.`);
   const [major,minor,patch] = version.split('.').map(Number);
   const branch = `${major}.${minor}`;
   const fixedPatch = FIXED_PATCHES[branch];
-  if (fixedPatch === undefined) return unknown(domain,'La rama de PHP declarada no tiene un umbral de corrección verificado en esta herramienta.',evidence,final.status,version);
+  if (fixedPatch === undefined) return unknown(domain,'La rama de PHP declarada no tiene un umbral de corrección verificado en esta herramienta.',evidence,final.status,version,edgeProviders);
   evidence.push(`Primera versión upstream corregida de esta rama: PHP ${branch}.${fixedPatch}.`);
   const affected = patch < fixedPatch;
-  return {status:affected?'potentially_affected':'patched_declared',domain,checkedAt:new Date().toISOString(),verdict:affected?'Versión potencialmente afectada':'Versión corregida declarada',summary:affected?`El sitio declara PHP ${version}, anterior a la corrección de su rama. Algunos proveedores aplican parches sin cambiar la versión base; es necesario revisar el paquete instalado.`:`El sitio declara PHP ${version}, igual o posterior a la corrección de su rama. Las cabeceras informadas por un tercero no confirman qué binario se ejecuta ni certifican la seguridad del sitio.`,evidence,phpVersion:version,httpStatus:final.status,url:current.href,recommendation:affected?'Actualizá a una versión corregida o comprobá el aviso de seguridad del proveedor para el paquete exacto instalado. Revisá todos los nodos y reiniciá los procesos PHP después de actualizar.':'Confirmá desde el servidor la versión o el parche del paquete y que todos los procesos PHP estén actualizados. Este resultado se limita a CVE-2026-109618 y CVE-2026-109619.'};
+  const baseRecommendation = affected?'Actualizá a una versión corregida o comprobá el aviso de seguridad del proveedor para el paquete exacto instalado. Revisá todos los nodos y reiniciá los procesos PHP después de actualizar.':'Confirmá desde el servidor la versión o el parche del paquete y que todos los procesos PHP estén actualizados. Este resultado se limita a CVE-2026-109618 y CVE-2026-109619.';
+  return {status:affected?'potentially_affected':'patched_declared',domain,checkedAt:new Date().toISOString(),verdict:affected?'Versión potencialmente afectada':'Versión corregida declarada',summary:affected?`El sitio declara PHP ${version}, anterior a la corrección de su rama. Algunos proveedores aplican parches sin cambiar la versión base; es necesario revisar el paquete instalado.`:`El sitio declara PHP ${version}, igual o posterior a la corrección de su rama. Las cabeceras informadas por un tercero no confirman qué binario se ejecuta ni certifican la seguridad del sitio.`,evidence,phpVersion:version,httpStatus:final.status,url:current.href,recommendation:baseRecommendation + edgeCaveat(edgeProviders)};
 }
 
 async function boundedText(response,signal,maxBytes=MAX_BYTES) {

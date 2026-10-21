@@ -10,6 +10,8 @@ Ingresá un dominio y seleccioná **Verificar**. La página consulta las cabecer
 - **Versión corregida declarada:** el dato publicado coincide con una versión corregida de una rama conocida. La cabecera puede ser inexacta y no verifica todos los servidores que atienden el dominio.
 - **No se pudo determinar:** versión oculta, respuesta inaccesible o evidencia insuficiente. No equivale a “seguro”.
 
+Si las cabeceras públicas muestran señales de un WAF o CDN conocido (Cloudflare, Akamai, Sucuri, Imperva/Incapsula, Amazon CloudFront, Fastly o Azure Front Door), el resultado lo indica como evidencia adicional. En ese caso, la versión u otra información observada puede corresponder al borde de esa red y no al servidor de origen; cualquier veredicto para ese dominio debe confirmarse directamente en el servidor que ejecuta la aplicación.
+
 El aviso oficial de PHP del **21 de octubre de 2026** fija las correcciones en **8.2.35, 8.3.36, 8.4.27 y 8.5.12**. Revisá esta tabla cuando cambie el aviso. Para confirmar el parche, revisá el PHP que atiende las solicitudes y los paquetes de su proveedor.
 
 Fuente: https://www.php.net/archive/2026.php#2026-10-21-1
