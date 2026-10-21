@@ -88,9 +88,9 @@
       let report = '';
       let copyTimer;
       const statuses = {
-        potentially_affected: {title:'Versión potencialmente afectada',kicker:'Requiere revisión',bg:'#25190e',ink:'#ffbd85'},
-        patched_declared: {title:'Versión corregida declarada',kicker:'Coincide con una versión corregida',bg:'#092317',ink:'#76ffa8'},
-        indeterminate: {title:'No se pudo determinar',kicker:'Información insuficiente',bg:'#211f0f',ink:'#ead787'}
+        potentially_affected: {title:'Vulnerable',kicker:'PHP2Shell · acción requerida',bg:'#25190e',ink:'#ffbd85'},
+        patched_declared: {title:'No vulnerable',kicker:'PHP2Shell · versión corregida declarada',bg:'#092317',ink:'#76ffa8'},
+        indeterminate: {title:'Revisar',kicker:'PHP2Shell · no se pudo confirmar',bg:'#211f0f',ink:'#ead787'}
       };
       const put = (id, text) => { document.getElementById(id).textContent = text; };
       const clean = (value, fallback = '') => typeof value === 'string' && value.trim() ? value.trim().slice(0,1500) : fallback;
