@@ -3,16 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="dark">
   <meta name="description" content="Consultá qué evidencia pública ofrece un dominio sobre su versión de PHP frente a PHP2Shell.">
   <meta name="referrer" content="no-referrer">
   <title>PHP2Shell Check · Verificá tu dominio</title>
   <style>
     :root{--ink:#122c30;--muted:#617477;--teal:#087f73;--teal-dark:#04675e;--line:#dce6e2;--paper:#f6f8f5;--white:#fff;--orange:#ac4c17;--green:#23735a;--yellow:#8e651c;--shadow:0 12px 50px #163f3510;--radius:22px}
     *{box-sizing:border-box}html{min-height:100%;background:var(--paper)}body{margin:0;color:var(--ink);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}button,input{font:inherit}button{cursor:pointer}a{color:var(--teal-dark);text-underline-offset:3px}button,input,a,summary{-webkit-tap-highlight-color:transparent}button:focus-visible,input:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #0e9b8470;outline-offset:4px}::selection{background:#bce9d8}svg{display:block;flex-shrink:0}[hidden]{display:none!important}.wrap{width:min(100% - 48px,1016px);margin-inline:auto}header{display:flex;align-items:center;justify-content:space-between;padding-block:28px;border-bottom:1px solid var(--line);gap:16px}.brand{display:flex;align-items:center;gap:11px;font-weight:750;letter-spacing:-.45px;font-size:18px}.mark{width:35px;height:35px;display:grid;place-items:center;background:var(--teal);color:white;border-radius:11px}.public-label{display:flex;align-items:center;gap:7px;font-size:12px;white-space:nowrap;color:#506966}.public-label:before{content:"";width:6px;height:6px;border-radius:50%;background:#51a58a}main{max-width:760px;margin:78px auto 0;padding-bottom:38px}.eyebrow{font-size:11px;font-weight:750;letter-spacing:1.65px;color:var(--teal-dark);margin:0 0 15px;text-transform:uppercase}h1{font-size:clamp(36px,5.5vw,54px);font-weight:740;line-height:1.13;letter-spacing:-2px;margin:0 0 20px}.intro{max-width:565px;margin:0;color:var(--muted);font-size:17px;line-height:1.7}.check-card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:30px;margin-top:34px;box-shadow:var(--shadow)}label{display:block;font-size:13px;font-weight:700;margin-bottom:10px}.input-row{display:flex;gap:10px}.input-wrap{min-width:0;position:relative;flex:1}.input-icon{position:absolute;top:19px;left:16px;color:#69817e;pointer-events:none}input{width:100%;height:58px;background:#fbfcfa;border:1px solid #cbd9d3;border-radius:12px;padding:0 15px 0 46px;font-size:16px;color:var(--ink);transition:border-color .16s,box-shadow .16s}input::placeholder{color:#8b9c98}input:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3px #087f7310}input[aria-invalid=true]{border-color:#bd5f41}.primary{border:0;background:var(--teal);color:white;min-width:146px;padding:0 22px;border-radius:12px;height:58px;font-weight:700;display:flex;gap:12px;justify-content:center;align-items:center;transition:background .15s,transform .15s}.primary:hover{background:var(--teal-dark)}.primary:active{transform:translateY(1px)}.primary:disabled{cursor:wait;opacity:.72}.hint{margin:12px 0 0;font-size:12px;color:var(--muted)}.scope{display:flex;gap:8px;align-items:flex-start;color:var(--muted);font-size:12px;margin:20px 2px 0}.scope svg{margin-top:2px;color:#72918b}.loading{padding-top:22px;display:flex;align-items:center;gap:11px;font-size:13px;color:var(--muted)}.spinner{width:16px;height:16px;border:2px solid #cee5de;border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.error{margin-top:20px;padding:14px 16px;border:1px solid #efd5ca;border-radius:12px;background:#fff6f1;color:#8e3e23;font-size:13px}.result{margin-top:24px;border:1px solid var(--line);border-radius:var(--radius);background:var(--white);overflow:hidden;box-shadow:var(--shadow)}.result-top{padding:25px 28px 22px;background:var(--status-bg,#f8f8f1);border-bottom:1px solid var(--line)}.result-kicker{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:750;letter-spacing:1.3px;text-transform:uppercase;color:var(--status-ink,var(--yellow));margin-bottom:9px}.status-dot{height:7px;width:7px;border-radius:50%;background:currentColor}.result h2{font-size:23px;letter-spacing:-.55px;line-height:1.3;margin:0 0 9px}.result h2:focus{outline:none}.summary{font-size:14px;color:#4f6663;margin:0;max-width:610px}.result-body{padding:24px 28px}.facts{display:grid;grid-template-columns:1.4fr 1fr .7fr;gap:18px;margin:0 0 24px}.facts dt{font-size:11px;color:var(--muted);margin-bottom:5px}.facts dd{font-size:14px;font-weight:650;margin:0;overflow-wrap:anywhere}.result h3{font-size:12px;margin:0 0 10px;font-weight:750}.evidence{font-size:13px;line-height:1.65;color:#536965;padding:0;margin:0;list-style:none}.evidence li{padding-left:15px;position:relative;overflow-wrap:anywhere}.evidence li+li{margin-top:7px}.evidence li:before{position:absolute;left:0;top:9px;content:"";width:4px;height:4px;background:#91aaa2;border-radius:50%}.next-step{background:#f5f8f5;border:1px solid #e4ece5;border-radius:12px;padding:16px 18px;margin-top:22px}.next-step h3{margin-bottom:5px}.next-step p{margin:0;font-size:13px;color:#506962}.result-bottom{border-top:1px solid var(--line);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px}.checked-at{font-size:10px;color:var(--muted)}.copy{border:0;background:none;color:var(--teal-dark);font-size:11px;font-weight:700;padding:4px 0}.copy:hover{text-decoration:underline}.disclosure{margin-top:27px;font-size:12px;color:var(--muted)}summary{cursor:pointer;width:fit-content;color:#516e67;font-weight:600}details p{max-width:670px;margin:10px 0 0;font-size:12px;line-height:1.75}footer{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;font-size:11px;color:#7c8e87;border-top:1px solid var(--line);padding-block:22px 27px;margin-top:38px}footer a{color:#637f73}noscript p{padding:15px;color:#8e3e23;background:#fff5f0;border-radius:10px}.reduced-motion .spinner{animation:none}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}@media(max-width:620px){.wrap{width:calc(100% - 36px)}header{padding-block:21px}.brand{font-size:16px;gap:9px}.mark{height:32px;width:32px}.public-label{font-size:10px}main{margin-top:48px}h1{letter-spacing:-1.4px}.intro{font-size:15px}.check-card{padding:22px;margin-top:27px;border-radius:18px}.input-row{flex-direction:column;gap:11px}.primary{width:100%;height:52px}.scope{font-size:11px}.result-top,.result-body{padding:22px}.result h2{font-size:21px}.facts{grid-template-columns:1fr 1fr;gap:17px}.facts .domain-fact{grid-column:1/-1}.result-bottom{padding:14px 22px;align-items:flex-start}.checked-at{max-width:67%;line-height:1.7}footer{flex-direction:column;gap:9px;margin-top:24px}.eyebrow{font-size:10px;letter-spacing:1.4px}}@media(max-width:370px){.public-label{display:none}.check-card{padding:18px}.wrap{width:calc(100% - 28px)}h1{font-size:34px}}
+  
+    :root{--ink:#dcffe9;--muted:#8eaf9b;--teal:#44f58e;--teal-dark:#82ffb1;--line:#1a3c29;--paper:#020604;--white:#06100a;--orange:#ffb77e;--green:#65fba2;--yellow:#e6cd77;--shadow:0 18px 70px #0009,0 0 28px #20e67106;--radius:17px}
+    html{background:#020604}body{background:transparent;font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;color:var(--ink)}#matrix-rain{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.43}.wrap{position:relative;z-index:1}header{background:linear-gradient(180deg,#020604e8,#02060496);border-bottom-color:#245d3b;padding-inline:0}.brand{letter-spacing:-.65px;color:#d7ffe4}.mark{color:#54ffa0;background:#07170d;border:1px solid #2f8c4c;box-shadow:0 0 20px #27f47715}.public-label{color:#88c69d}.public-label:before{background:#57ff9d;box-shadow:0 0 8px #4aff96}main{padding-top:8px}.eyebrow{color:#68fda1;text-shadow:0 0 18px #2cff6e35}h1{color:#b2ffca;text-shadow:0 0 35px #27ff7220;letter-spacing:-2.7px}.intro{color:#a3bfae;text-shadow:0 2px 4px #000}.check-card{background:#030c07f5;border-color:#28633b;box-shadow:0 18px 65px #0009,inset 0 1px #55ff8910}.input-icon{color:#55d887}input{background:#020805;color:#c7ffdc;border-color:#295239;border-radius:9px}input::placeholder{color:#5d826a}input:focus{border-color:#4bf28d;box-shadow:0 0 0 3px #43ee7b14}input[aria-invalid=true]{border-color:#ed9a67}.primary{background:#54ef8e;color:#031108;border:1px solid #78ffaa;border-radius:9px;box-shadow:0 0 22px #41ff7315}.primary:hover{background:#86ffac;box-shadow:0 0 26px #41ff732a}.hint,.provider-note{color:#8eaf9b}.provider-note a{color:#76ef9f}.scope{color:#99b8a5}.scope svg{color:#65a97d}.error{background:#231309f5;color:#ffc5a0;border-color:#814b2a}.spinner{border-color:#214a31;border-top-color:#6aff9d}.result{background:#040d08f8;border-color:#295a3a}.result-top{background:var(--status-bg,#111d11);border-bottom-color:#284331}.summary,.evidence{color:#a8c5b1}.evidence li:before{background:#6aa77a}.next-step{background:#09190f;border-color:#23472f}.next-step p{color:#b0cbb9}.checked-at{color:#86aa91}.copy{color:#75f59e}summary{color:#9adcaf}footer{color:#7da18a;background:#020604a8;flex-wrap:wrap;align-items:center}footer a{color:#8fc7a0}.motion-toggle{font:inherit;font-size:10px;color:#8fc7a0;border:1px solid #244b30;border-radius:6px;padding:5px 9px;background:#041008}.motion-toggle:hover{border-color:#54ef8e;color:#b2ffca}button:focus-visible,input:focus-visible,a:focus-visible,summary:focus-visible{outline-color:#70ffa0aa}::selection{background:#1f7142;color:#e8fff0}@media(max-width:620px){h1{letter-spacing:-1.8px}header{background:#020604dc}.check-card{background:#030c07f8}footer{gap:13px}.motion-toggle{margin-left:0}}@media(prefers-reduced-motion:reduce){#matrix-rain{opacity:.22}}
   </style>
 </head>
 <body>
+  <canvas id="matrix-rain" aria-hidden="true"></canvas>
   <div class="wrap">
     <header>
       <div class="brand"><span class="mark" aria-hidden="true"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3 4.5 6.1v5.5c0 4.3 3.1 7.4 7.5 9.4 4.4-2 7.5-5.1 7.5-9.4V6.1L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m8.3 12 2.4 2.4 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>PHP2Shell Check</div>
@@ -32,9 +36,10 @@
             </div>
             <button id="submit" class="primary" type="submit"><span id="button-label">Verificar</span><svg id="button-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           </div>
-          <p id="domain-hint" class="hint">Solo el dominio, sin rutas. También podés pegar la dirección principal del sitio.</p>
+          <p id="domain-hint" class="hint">Solo el dominio, sin rutas. También podés pegar la dirección HTTPS principal del sitio.</p>
+          <p class="hint">El dominio se envía a <a href="https://hackertarget.com/http-header-check/" target="_blank" rel="noopener noreferrer">HackerTarget</a> para consultar sus cabeceras públicas y a Cloudflare para resolver su DNS. Servicio sujeto a cuotas.</p>
         </form>
-        <div id="loading" class="loading" role="status" hidden><span class="spinner" aria-hidden="true"></span><span>Consultando el sitio y revisando su respuesta…</span></div>
+        <div id="loading" class="loading" role="status" hidden><span class="spinner" aria-hidden="true"></span><span>Consultando las cabeceras públicas del sitio…</span></div>
         <div id="error" class="error" role="alert" hidden></div>
         <noscript><p>Activá JavaScript en el navegador para consultar un dominio.</p></noscript>
       </section>
@@ -59,16 +64,16 @@
       </section>
       <details class="disclosure">
         <summary>Qué puede decir esta consulta</summary>
-        <p>Se consulta la respuesta HTTP del sitio para buscar una versión de PHP declarada. Si la versión está oculta, hay respuestas contradictorias o la información no alcanza, el resultado será “No se pudo determinar”. Una versión antigua puede tener correcciones aplicadas por su proveedor; una cabecera también puede ser inexacta.</p>
+        <p>Se analiza la respuesta HTTP informada por HackerTarget para buscar una versión de PHP declarada. La consulta DNS previa usa Cloudflare. El proveedor puede seguir redirecciones; si informa un cambio de dominio o de HTTPS a HTTP, el resultado queda indeterminado. Si la versión está oculta, hay respuestas contradictorias o la información no alcanza, el resultado será “No se pudo determinar”. Una versión antigua puede tener correcciones aplicadas por su proveedor; una cabecera también puede ser inexacta.</p>
         <p>El aviso de PHP del 21 de octubre de 2026 establece las correcciones en las ramas 8.2.35, 8.3.36, 8.4.27 y 8.5.12. Confirmar la protección exige revisar el PHP que realmente atiende las solicitudes y los parches del proveedor.</p>
       </details>
     </main>
-    <footer><span>CVE-2026-109618 · CVE-2026-109619</span><a href="https://www.php.net/archive/2026.php#2026-10-21-1" target="_blank" rel="noopener noreferrer">Aviso oficial de PHP ↗</a></footer>
+    <footer><span>CVE-2026-109618 · CVE-2026-109619</span><a href="https://www.php.net/archive/2026.php#2026-10-21-1" target="_blank" rel="noopener noreferrer">Aviso oficial de PHP ↗</a><button id="motion-toggle" class="motion-toggle" type="button" aria-pressed="false">Pausar fondo</button></footer>
   </div>
-  <script>
+  <script type="module">
+    import {checkDomain, InputError} from './checker.js';
     (() => {
       'use strict';
-      const ENDPOINT = 'https://php2shell-check-api.softbloom11.chatgpt.site/api/check';
       const form = document.getElementById('check-form');
       const input = document.getElementById('domain');
       const submit = document.getElementById('submit');
@@ -82,9 +87,9 @@
       let report = '';
       let copyTimer;
       const statuses = {
-        potentially_affected: {title:'Versión potencialmente afectada',kicker:'Requiere revisión',bg:'#fff5ed',ink:'#ac4c17'},
-        patched_declared: {title:'Versión corregida declarada',kicker:'Coincide con una versión corregida',bg:'#edf7f1',ink:'#23735a'},
-        indeterminate: {title:'No se pudo determinar',kicker:'Información insuficiente',bg:'#faf7e9',ink:'#8e651c'}
+        potentially_affected: {title:'Versión potencialmente afectada',kicker:'Requiere revisión',bg:'#25190e',ink:'#ffbd85'},
+        patched_declared: {title:'Versión corregida declarada',kicker:'Coincide con una versión corregida',bg:'#092317',ink:'#76ffa8'},
+        indeterminate: {title:'No se pudo determinar',kicker:'Información insuficiente',bg:'#211f0f',ink:'#ead787'}
       };
       const put = (id, text) => { document.getElementById(id).textContent = text; };
       const clean = (value, fallback = '') => typeof value === 'string' && value.trim() ? value.trim().slice(0,1500) : fallback;
@@ -157,20 +162,12 @@
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(),15000);
         try {
-          const response = await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({domain}),signal:controller.signal,credentials:'omit',cache:'no-store',referrerPolicy:'no-referrer'});
-          let payload;
-          try { payload = await response.json(); } catch { throw new Error('El servicio no devolvió un resultado válido. Volvé a intentar en unos minutos.'); }
-          if (!response.ok) {
-            const fallback = response.status === 429 ? 'Se alcanzó el límite de consultas. Esperá un momento y volvé a intentar.' : 'No pudimos completar la consulta. Revisá el dominio y volvé a intentar.';
-            const message = clean(payload?.error,clean(payload?.message,fallback));
-            showError(message,response.status === 400);
-            return;
-          }
-          if (!payload || typeof payload !== 'object' || Array.isArray(payload)) throw new Error('El servicio no devolvió un resultado válido. Volvé a intentar.');
+          const payload = await checkDomain(domain,{signal:controller.signal});
           render(payload,domain);
         } catch (err) {
-          if (err?.name === 'AbortError') showError('La consulta tardó demasiado. Volvé a intentar en unos momentos.');
-          else if (err instanceof TypeError) showError('No se pudo contactar al verificador. Comprobá tu conexión y volvé a intentar.');
+          if (err instanceof InputError) { showError(clean(err.message),true); input.focus(); }
+          else if (err?.name === 'AbortError') showError('La consulta tardó demasiado. Volvé a intentar en unos momentos.');
+          else if (err instanceof TypeError) showError('No se pudo contactar a los servicios de consulta. Comprobá tu conexión y volvé a intentar.');
           else showError(clean(err?.message,'No pudimos completar la consulta. Volvé a intentar.'));
         } finally {
           clearTimeout(timeout);
@@ -186,6 +183,55 @@
           copyTimer = setTimeout(() => { copyButton.textContent = 'Copiar resultado'; },2500);
         } catch { copyButton.textContent = 'No se pudo copiar'; }
       });
+    })();
+  </script>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById('matrix-rain');
+      const ctx = canvas.getContext('2d');
+      const toggle = document.getElementById('motion-toggle');
+      if (!ctx) { toggle.hidden = true; return; }
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+      const glyphs = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホXYZ{}<>/';
+      let width = 0, height = 0, columns = [], frame = 0, last = 0, paused = reduced.matches;
+      function resize() {
+        const ratio = Math.min(devicePixelRatio || 1, 1.5);
+        width = innerWidth; height = innerHeight;
+        canvas.width = Math.floor(width * ratio); canvas.height = Math.floor(height * ratio);
+        ctx.setTransform(ratio,0,0,ratio,0,0);
+        ctx.fillStyle = '#020604'; ctx.fillRect(0,0,width,height);
+        const count = Math.min(100,Math.ceil(width / 20));
+        columns = Array.from({length:count},(_,i) => ({x:i * width / count,y:Math.random()*height,speed:8+Math.random()*10}));
+        for (let i=0;i<18;i++) draw();
+      }
+      function draw() {
+        ctx.fillStyle = 'rgba(2,6,4,0.075)'; ctx.fillRect(0,0,width,height);
+        ctx.font = '15px monospace';
+        for (const col of columns) {
+          ctx.fillStyle = Math.random()>.98 ? '#d1ffe1' : '#20c965';
+          ctx.fillText(glyphs[Math.floor(Math.random()*glyphs.length)],col.x,col.y);
+          col.y += col.speed;
+          if (col.y > height && Math.random()>.97) col.y = -20;
+        }
+      }
+      function tick(now) {
+        if (paused || document.hidden) { frame = 0; return; }
+        if (now-last > 55) {draw();last=now;}
+        frame=requestAnimationFrame(tick);
+      }
+      function sync() {
+        toggle.textContent = paused ? 'Activar fondo' : 'Pausar fondo';
+        toggle.setAttribute('aria-pressed',String(paused));
+        if (frame) cancelAnimationFrame(frame);
+        frame = !paused && !document.hidden ? requestAnimationFrame(tick) : 0;
+      }
+      toggle.addEventListener('click',() => {paused=!paused;sync();});
+      reduced.addEventListener('change',() => {paused=reduced.matches;sync();});
+      document.addEventListener('visibilitychange',sync);
+      let resizeTimer;
+      addEventListener('resize',() => {clearTimeout(resizeTimer);resizeTimer=setTimeout(resize,150);});
+      resize();sync();
     })();
   </script>
 </body>
