@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="es-UY">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Consultá qué evidencia pública ofrece un dominio sobre su versión de PHP frente a PHP2Shell.">
+  <meta name="referrer" content="no-referrer">
+  <title>PHP2Shell Check · Verificá tu dominio</title>
+  <style>
+    :root{--ink:#122c30;--muted:#617477;--teal:#087f73;--teal-dark:#04675e;--line:#dce6e2;--paper:#f6f8f5;--white:#fff;--orange:#ac4c17;--green:#23735a;--yellow:#8e651c;--shadow:0 12px 50px #163f3510;--radius:22px}
+    *{box-sizing:border-box}html{min-height:100%;background:var(--paper)}body{margin:0;color:var(--ink);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}button,input{font:inherit}button{cursor:pointer}a{color:var(--teal-dark);text-underline-offset:3px}button,input,a,summary{-webkit-tap-highlight-color:transparent}button:focus-visible,input:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #0e9b8470;outline-offset:4px}::selection{background:#bce9d8}svg{display:block;flex-shrink:0}[hidden]{display:none!important}.wrap{width:min(100% - 48px,1016px);margin-inline:auto}header{display:flex;align-items:center;justify-content:space-between;padding-block:28px;border-bottom:1px solid var(--line);gap:16px}.brand{display:flex;align-items:center;gap:11px;font-weight:750;letter-spacing:-.45px;font-size:18px}.mark{width:35px;height:35px;display:grid;place-items:center;background:var(--teal);color:white;border-radius:11px}.public-label{display:flex;align-items:center;gap:7px;font-size:12px;white-space:nowrap;color:#506966}.public-label:before{content:"";width:6px;height:6px;border-radius:50%;background:#51a58a}main{max-width:760px;margin:78px auto 0;padding-bottom:38px}.eyebrow{font-size:11px;font-weight:750;letter-spacing:1.65px;color:var(--teal-dark);margin:0 0 15px;text-transform:uppercase}h1{font-size:clamp(36px,5.5vw,54px);font-weight:740;line-height:1.13;letter-spacing:-2px;margin:0 0 20px}.intro{max-width:565px;margin:0;color:var(--muted);font-size:17px;line-height:1.7}.check-card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:30px;margin-top:34px;box-shadow:var(--shadow)}label{display:block;font-size:13px;font-weight:700;margin-bottom:10px}.input-row{display:flex;gap:10px}.input-wrap{min-width:0;position:relative;flex:1}.input-icon{position:absolute;top:19px;left:16px;color:#69817e;pointer-events:none}input{width:100%;height:58px;background:#fbfcfa;border:1px solid #cbd9d3;border-radius:12px;padding:0 15px 0 46px;font-size:16px;color:var(--ink);transition:border-color .16s,box-shadow .16s}input::placeholder{color:#8b9c98}input:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3px #087f7310}input[aria-invalid=true]{border-color:#bd5f41}.primary{border:0;background:var(--teal);color:white;min-width:146px;padding:0 22px;border-radius:12px;height:58px;font-weight:700;display:flex;gap:12px;justify-content:center;align-items:center;transition:background .15s,transform .15s}.primary:hover{background:var(--teal-dark)}.primary:active{transform:translateY(1px)}.primary:disabled{cursor:wait;opacity:.72}.hint{margin:12px 0 0;font-size:12px;color:var(--muted)}.scope{display:flex;gap:8px;align-items:flex-start;color:var(--muted);font-size:12px;margin:20px 2px 0}.scope svg{margin-top:2px;color:#72918b}.loading{padding-top:22px;display:flex;align-items:center;gap:11px;font-size:13px;color:var(--muted)}.spinner{width:16px;height:16px;border:2px solid #cee5de;border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.error{margin-top:20px;padding:14px 16px;border:1px solid #efd5ca;border-radius:12px;background:#fff6f1;color:#8e3e23;font-size:13px}.result{margin-top:24px;border:1px solid var(--line);border-radius:var(--radius);background:var(--white);overflow:hidden;box-shadow:var(--shadow)}.result-top{padding:25px 28px 22px;background:var(--status-bg,#f8f8f1);border-bottom:1px solid var(--line)}.result-kicker{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:750;letter-spacing:1.3px;text-transform:uppercase;color:var(--status-ink,var(--yellow));margin-bottom:9px}.status-dot{height:7px;width:7px;border-radius:50%;background:currentColor}.result h2{font-size:23px;letter-spacing:-.55px;line-height:1.3;margin:0 0 9px}.result h2:focus{outline:none}.summary{font-size:14px;color:#4f6663;margin:0;max-width:610px}.result-body{padding:24px 28px}.facts{display:grid;grid-template-columns:1.4fr 1fr .7fr;gap:18px;margin:0 0 24px}.facts dt{font-size:11px;color:var(--muted);margin-bottom:5px}.facts dd{font-size:14px;font-weight:650;margin:0;overflow-wrap:anywhere}.result h3{font-size:12px;margin:0 0 10px;font-weight:750}.evidence{font-size:13px;line-height:1.65;color:#536965;padding:0;margin:0;list-style:none}.evidence li{padding-left:15px;position:relative;overflow-wrap:anywhere}.evidence li+li{margin-top:7px}.evidence li:before{position:absolute;left:0;top:9px;content:"";width:4px;height:4px;background:#91aaa2;border-radius:50%}.next-step{background:#f5f8f5;border:1px solid #e4ece5;border-radius:12px;padding:16px 18px;margin-top:22px}.next-step h3{margin-bottom:5px}.next-step p{margin:0;font-size:13px;color:#506962}.result-bottom{border-top:1px solid var(--line);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px}.checked-at{font-size:10px;color:var(--muted)}.copy{border:0;background:none;color:var(--teal-dark);font-size:11px;font-weight:700;padding:4px 0}.copy:hover{text-decoration:underline}.disclosure{margin-top:27px;font-size:12px;color:var(--muted)}summary{cursor:pointer;width:fit-content;color:#516e67;font-weight:600}details p{max-width:670px;margin:10px 0 0;font-size:12px;line-height:1.75}footer{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;font-size:11px;color:#7c8e87;border-top:1px solid var(--line);padding-block:22px 27px;margin-top:38px}footer a{color:#637f73}noscript p{padding:15px;color:#8e3e23;background:#fff5f0;border-radius:10px}.reduced-motion .spinner{animation:none}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}@media(max-width:620px){.wrap{width:calc(100% - 36px)}header{padding-block:21px}.brand{font-size:16px;gap:9px}.mark{height:32px;width:32px}.public-label{font-size:10px}main{margin-top:48px}h1{letter-spacing:-1.4px}.intro{font-size:15px}.check-card{padding:22px;margin-top:27px;border-radius:18px}.input-row{flex-direction:column;gap:11px}.primary{width:100%;height:52px}.scope{font-size:11px}.result-top,.result-body{padding:22px}.result h2{font-size:21px}.facts{grid-template-columns:1fr 1fr;gap:17px}.facts .domain-fact{grid-column:1/-1}.result-bottom{padding:14px 22px;align-items:flex-start}.checked-at{max-width:67%;line-height:1.7}footer{flex-direction:column;gap:9px;margin-top:24px}.eyebrow{font-size:10px;letter-spacing:1.4px}}@media(max-width:370px){.public-label{display:none}.check-card{padding:18px}.wrap{width:calc(100% - 28px)}h1{font-size:34px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand"><span class="mark" aria-hidden="true"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3 4.5 6.1v5.5c0 4.3 3.1 7.4 7.5 9.4 4.4-2 7.5-5.1 7.5-9.4V6.1L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m8.3 12 2.4 2.4 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>PHP2Shell Check</div>
+      <span class="public-label">Consulta pública</span>
+    </header>
+    <main>
+      <p class="eyebrow">Verificación de exposición · PHP2Shell</p>
+      <h1>Comprobá tu sitio.</h1>
+      <p class="intro">Ingresá un dominio y revisá la evidencia pública sobre su versión de PHP frente a las vulnerabilidades PHP2Shell.</p>
+      <section class="check-card" aria-label="Consulta de dominio">
+        <form id="check-form" method="post" novalidate>
+          <label for="domain">Dominio del sitio</label>
+          <div class="input-row">
+            <div class="input-wrap">
+              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18M12 3c2.1 2.5 3.2 5.5 3.2 9S14.1 18.5 12 21c-2.1-2.5-3.2-5.5-3.2-9S9.9 5.5 12 3Z" stroke="currentColor" stroke-width="1.6"/></svg>
+              <input id="domain" name="domain" type="text" placeholder="ejemplo.edu.uy" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="url" maxlength="300" aria-describedby="domain-hint" required>
+            </div>
+            <button id="submit" class="primary" type="submit"><span id="button-label">Verificar</span><svg id="button-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+          <p id="domain-hint" class="hint">Solo el dominio, sin rutas. También podés pegar la dirección principal del sitio.</p>
+        </form>
+        <div id="loading" class="loading" role="status" hidden><span class="spinner" aria-hidden="true"></span><span>Consultando el sitio y revisando su respuesta…</span></div>
+        <div id="error" class="error" role="alert" hidden></div>
+        <noscript><p>Activá JavaScript en el navegador para consultar un dominio.</p></noscript>
+      </section>
+      <p class="scope"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M12 11v6m0-10v.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Comprobación pasiva de la información declarada por el sitio. No confirma por sí sola su seguridad.</span></p>
+      <section id="result" class="result" aria-label="Resultado de la consulta" hidden>
+        <div class="result-top">
+          <div class="result-kicker"><span class="status-dot" aria-hidden="true"></span><span id="result-kicker">Resultado</span></div>
+          <h2 id="result-title" tabindex="-1"></h2>
+          <p id="result-summary" class="summary"></p>
+        </div>
+        <div class="result-body">
+          <dl class="facts">
+            <div class="domain-fact"><dt>Dominio consultado</dt><dd id="result-domain"></dd></div>
+            <div><dt>PHP declarado</dt><dd id="result-version"></dd></div>
+            <div><dt>Respuesta HTTP</dt><dd id="result-http"></dd></div>
+          </dl>
+          <h3>Evidencia encontrada</h3>
+          <ul id="result-evidence" class="evidence"></ul>
+          <div class="next-step"><h3>Próximo paso</h3><p id="result-recommendation"></p></div>
+        </div>
+        <div class="result-bottom"><time id="checked-at" class="checked-at"></time><button id="copy" class="copy" type="button">Copiar resultado</button></div>
+      </section>
+      <details class="disclosure">
+        <summary>Qué puede decir esta consulta</summary>
+        <p>Se consulta la respuesta HTTP del sitio para buscar una versión de PHP declarada. Si la versión está oculta, hay respuestas contradictorias o la información no alcanza, el resultado será “No se pudo determinar”. Una versión antigua puede tener correcciones aplicadas por su proveedor; una cabecera también puede ser inexacta.</p>
+        <p>El aviso de PHP del 21 de octubre de 2026 establece las correcciones en las ramas 8.2.35, 8.3.36, 8.4.27 y 8.5.12. Confirmar la protección exige revisar el PHP que realmente atiende las solicitudes y los parches del proveedor.</p>
+      </details>
+    </main>
+    <footer><span>CVE-2026-109618 · CVE-2026-109619</span><a href="https://www.php.net/archive/2026.php#2026-10-21-1" target="_blank" rel="noopener noreferrer">Aviso oficial de PHP ↗</a></footer>
+  </div>
+  <script>
+    (() => {
+      'use strict';
+      const ENDPOINT = 'https://php2shell-check-api.softbloom11.chatgpt.site/api/check';
+      const form = document.getElementById('check-form');
+      const input = document.getElementById('domain');
+      const submit = document.getElementById('submit');
+      const buttonLabel = document.getElementById('button-label');
+      const arrow = document.getElementById('button-arrow');
+      const loading = document.getElementById('loading');
+      const errorBox = document.getElementById('error');
+      const result = document.getElementById('result');
+      const copyButton = document.getElementById('copy');
+      let busy = false;
+      let report = '';
+      let copyTimer;
+      const statuses = {
+        potentially_affected: {title:'Versión potencialmente afectada',kicker:'Requiere revisión',bg:'#fff5ed',ink:'#ac4c17'},
+        patched_declared: {title:'Versión corregida declarada',kicker:'Coincide con una versión corregida',bg:'#edf7f1',ink:'#23735a'},
+        indeterminate: {title:'No se pudo determinar',kicker:'Información insuficiente',bg:'#faf7e9',ink:'#8e651c'}
+      };
+      const put = (id, text) => { document.getElementById(id).textContent = text; };
+      const clean = (value, fallback = '') => typeof value === 'string' && value.trim() ? value.trim().slice(0,1500) : fallback;
+      function setBusy(value) {
+        busy = value;
+        submit.disabled = value;
+        input.readOnly = value;
+        form.setAttribute('aria-busy',String(value));
+        loading.hidden = !value;
+        arrow.hidden = value;
+        buttonLabel.textContent = value ? 'Verificando…' : 'Verificar';
+      }
+      function showError(message, invalid = false) {
+        errorBox.textContent = message;
+        errorBox.hidden = false;
+        input.setAttribute('aria-invalid',String(invalid));
+      }
+      function render(data, requestedDomain) {
+        const statusKey = Object.hasOwn(statuses,data.status) ? data.status : Object.hasOwn(statuses,data.verdict) ? data.verdict : 'indeterminate';
+        const style = statuses[statusKey];
+        const domain = clean(data.domain,requestedDomain);
+        const summary = clean(data.summary,'La respuesta del sitio no aporta evidencia suficiente para concluir su estado frente a PHP2Shell.');
+        const version = clean(data.phpVersion,'No informada');
+        const http = Number.isInteger(data.httpStatus) && data.httpStatus >= 100 && data.httpStatus <= 599 ? String(data.httpStatus) : 'Sin respuesta';
+        const recommendation = clean(data.recommendation,'Revisá la versión y los parches del PHP que atiende este sitio con su administrador.');
+        const evidence = Array.isArray(data.evidence) ? data.evidence.filter(item => typeof item === 'string' && item.trim()).slice(0,12).map(item => clean(item)) : [];
+        if (!evidence.length) evidence.push('No se recibió evidencia suficiente en la consulta.');
+        result.style.setProperty('--status-bg',style.bg);
+        result.style.setProperty('--status-ink',style.ink);
+        put('result-kicker',style.kicker);
+        put('result-title',style.title);
+        put('result-summary',summary);
+        put('result-domain',domain);
+        put('result-version',version);
+        put('result-http',http);
+        put('result-recommendation',recommendation);
+        const list = document.getElementById('result-evidence');
+        list.replaceChildren(...evidence.map(text => { const li = document.createElement('li'); li.textContent = text; return li; }));
+        const time = document.getElementById('checked-at');
+        const date = typeof data.checkedAt === 'string' ? new Date(data.checkedAt) : null;
+        if (date && Number.isFinite(date.getTime())) {
+          time.dateTime = date.toISOString();
+          time.textContent = 'Consultado: ' + new Intl.DateTimeFormat('es-UY',{dateStyle:'medium',timeStyle:'short'}).format(date);
+          time.title = date.toISOString();
+        } else {
+          time.removeAttribute('datetime');
+          time.removeAttribute('title');
+          time.textContent = 'Sin fecha informada por el servicio';
+        }
+        report = ['PHP2Shell Check', 'Dominio: ' + domain, 'Resultado: ' + style.title, summary, 'PHP declarado: ' + version, 'HTTP: ' + http, 'Evidencia:', ...evidence.map(item => '• ' + item), 'Próximo paso: ' + recommendation, time.textContent, 'Alcance: comprobación pasiva de información declarada; no confirma la seguridad del sitio.'].join('\n');
+        copyButton.textContent = 'Copiar resultado';
+        copyButton.hidden = !navigator.clipboard || !window.isSecureContext;
+        result.hidden = false;
+        document.getElementById('result-title').focus({preventScroll:true});
+      }
+      input.addEventListener('input',() => { input.removeAttribute('aria-invalid'); errorBox.hidden = true; });
+      form.addEventListener('submit',async event => {
+        event.preventDefault();
+        if (busy) return;
+        const domain = input.value.trim();
+        result.hidden = true;
+        errorBox.hidden = true;
+        input.removeAttribute('aria-invalid');
+        if (!domain || /\s/.test(domain)) {
+          showError('Ingresá un dominio válido, por ejemplo: ejemplo.edu.uy.',true);
+          input.focus();
+          return;
+        }
+        setBusy(true);
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(),15000);
+        try {
+          const response = await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({domain}),signal:controller.signal,credentials:'omit',cache:'no-store',referrerPolicy:'no-referrer'});
+          let payload;
+          try { payload = await response.json(); } catch { throw new Error('El servicio no devolvió un resultado válido. Volvé a intentar en unos minutos.'); }
+          if (!response.ok) {
+            const fallback = response.status === 429 ? 'Se alcanzó el límite de consultas. Esperá un momento y volvé a intentar.' : 'No pudimos completar la consulta. Revisá el dominio y volvé a intentar.';
+            const message = clean(payload?.error,clean(payload?.message,fallback));
+            showError(message,response.status === 400);
+            return;
+          }
+          if (!payload || typeof payload !== 'object' || Array.isArray(payload)) throw new Error('El servicio no devolvió un resultado válido. Volvé a intentar.');
+          render(payload,domain);
+        } catch (err) {
+          if (err?.name === 'AbortError') showError('La consulta tardó demasiado. Volvé a intentar en unos momentos.');
+          else if (err instanceof TypeError) showError('No se pudo contactar al verificador. Comprobá tu conexión y volvé a intentar.');
+          else showError(clean(err?.message,'No pudimos completar la consulta. Volvé a intentar.'));
+        } finally {
+          clearTimeout(timeout);
+          setBusy(false);
+        }
+      });
+      copyButton.addEventListener('click',async () => {
+        if (!report) return;
+        try {
+          await navigator.clipboard.writeText(report);
+          copyButton.textContent = 'Resultado copiado';
+          clearTimeout(copyTimer);
+          copyTimer = setTimeout(() => { copyButton.textContent = 'Copiar resultado'; },2500);
+        } catch { copyButton.textContent = 'No se pudo copiar'; }
+      });
+    })();
+  </script>
+</body>
+</html>
