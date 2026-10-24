@@ -51,5 +51,5 @@ jobs:
             echo ""
             echo "URL: \`$URL\`"
             echo ""
-            echo "Pegá esta URL en el chat con Claude para que la cargue en \`checker.js\` (\`SELF_HOSTED_ENDPOINT\`) y publique el cambio."
+            echo "Cargá esta URL como valor de \`SELF_HOSTED_ENDPOINT\` en \`checker.js\` y publicá el cambio."
           } >> "$GITHUB_STEP_SUMMARY"
