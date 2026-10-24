@@ -7,6 +7,16 @@ const MAX_BYTES = 65536;
 const EDGE_HEADER_PROVIDERS = Object.freeze({'cf-ray':'Cloudflare','cf-cache-status':'Cloudflare','x-sucuri-id':'Sucuri','x-sucuri-cache':'Sucuri','x-iinfo':'Imperva/Incapsula','x-amz-cf-id':'Amazon CloudFront','x-akamai-transformed':'Akamai','x-azure-ref':'Azure Front Door'});
 const SERVER_EDGE_SIGNATURES = Object.freeze([[/cloudflare/i,'Cloudflare'],[/akamaighost/i,'Akamai'],[/sucuri/i,'Sucuri'],[/imperva|incapsula/i,'Imperva/Incapsula'],[/cloudfront/i,'Amazon CloudFront'],[/\bfastly\b/i,'Fastly']]);
 const CAPTURED_HEADERS = new Set(['server','x-powered-by','location',...Object.keys(EDGE_HEADER_PROVIDERS)]);
+/**
+ * URL de un endpoint propio de consulta pasiva de cabeceras (por ejemplo, el Worker
+ * de Cloudflare en worker/header-check.js, desplegado bajo tu propia cuenta gratuita).
+ * Vacío: se usa la API pública de HackerTarget, que comparte una cuota chica por IP
+ * entre todos los visitantes de esta página y puede devolver "cuota excedida" con
+ * poco uso. Con tu propio endpoint desplegado, cada visitante usa tu cuota propia
+ * (100.000 requests/día en la capa gratuita de Workers), sin ese límite compartido.
+ * Pegá acá la URL que te da `wrangler deploy` (ver instrucciones en worker/header-check.js).
+ */
+export const SELF_HOSTED_ENDPOINT = '';
 export class InputError extends Error {}
 export class ProviderError extends Error {}
 
@@ -119,12 +129,12 @@ function unknown(domain,summary,evidence=[],httpStatus=null,phpVersion=null,edge
 }
 
 /** The provider already follows redirects. We assess their scope; we cannot stop them retroactively. */
-export function assessHeaders(domainInput, raw, initialEvidence=[]) {
+export function assessHeaders(domainInput, raw, initialEvidence=[], providerLabel='HackerTarget') {
   const domain = normalizeDomain(domainInput);
   const blocks = parseHeaderBlocks(raw);
   const final = blocks.at(-1);
   const edgeProviders = edgeProvidersFrom(blocks);
-  const evidence = [...initialEvidence,'Cabeceras públicas observadas a través de HackerTarget.',`La respuesta final informada por el proveedor fue HTTP ${final.status}.`];
+  const evidence = [...initialEvidence,`Cabeceras públicas observadas a través de ${providerLabel}.`,`La respuesta final informada por el proveedor fue HTTP ${final.status}.`];
   if (edgeProviders.length) evidence.push(`Se observaron cabeceras asociadas a ${edgeProviders.join(', ')} en el camino de red; la respuesta pública puede corresponder a ese borde y no al servidor de origen.`);
   let current = new URL('https://' + domain + '/');
   for (let i=0;i<blocks.length;i++) {
@@ -195,9 +205,15 @@ export async function checkDomain(value,{fetcher=fetch,signal}={}) {
     const addresses = records.flat();
     if (!addresses.length) return unknown(domain,'No se encontraron direcciones públicas para este dominio.');
     if (addresses.length > 64 || addresses.some(address => !isPublicAddress(address))) throw new InputError('El dominio devuelve direcciones no públicas. Esta herramienta solo consulta sitios públicos.');
-    const response = await fetcher('https://api.hackertarget.com/httpheaders/?q=' + encodeURIComponent('https://' + domain + '/'),{method:'GET',signal:activeSignal,credentials:'omit',cache:'no-store',referrerPolicy:'no-referrer',redirect:'error'});
-    if (!response.ok) throw new ProviderError(response.status === 429?'HackerTarget alcanzó su cuota de consultas. Esperá y volvé a intentar más tarde.':'HackerTarget no pudo completar la consulta. Volvé a intentar más tarde.');
+    const selfHosted = SELF_HOSTED_ENDPOINT.trim();
+    const providerLabel = selfHosted ? 'tu endpoint propio' : 'HackerTarget';
+    const queryUrl = selfHosted ? selfHosted.replace(/\/$/,'') + '?domain=' + encodeURIComponent(domain) : 'https://api.hackertarget.com/httpheaders/?q=' + encodeURIComponent('https://' + domain + '/');
+    const response = await fetcher(queryUrl,{method:'GET',signal:activeSignal,credentials:'omit',cache:'no-store',referrerPolicy:'no-referrer',redirect:'error'});
+    if (!response.ok) {
+      if (selfHosted) throw new ProviderError(response.status === 429?'Tu endpoint propio alcanzó su propio límite de consultas. Esperá y volvé a intentar más tarde.':'Tu endpoint propio no pudo completar la consulta. Volvé a intentar más tarde.');
+      throw new ProviderError(response.status === 429?'HackerTarget alcanzó su cuota de consultas. Esperá y volvé a intentar más tarde.':'HackerTarget no pudo completar la consulta. Volvé a intentar más tarde.');
+    }
     const text = await boundedText(response,activeSignal);
-    return assessHeaders(domain,text,['El DNS de Cloudflare consultado devolvió únicamente direcciones públicas.']);
+    return assessHeaders(domain,text,['El DNS de Cloudflare consultado devolvió únicamente direcciones públicas.'],providerLabel);
   } finally { if (timer) clearTimeout(timer); }
 }

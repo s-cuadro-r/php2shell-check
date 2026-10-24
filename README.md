@@ -24,10 +24,26 @@ La aplicación no guarda un historial de consultas. GitHub y los proveedores pue
 
 Se aceptan dominios públicos con HTTPS. Se rechazan direcciones IP, destinos privados conocidos, credenciales, puertos personalizados y rutas. HackerTarget puede seguir redirecciones; si la respuesta indica otro dominio, la evaluación se considera indeterminada. La resolución pública previa no fija la IP que el proveedor usará posteriormente.
 
+## Cuota de consultas y endpoint propio
+
+Por defecto, la página usa la API gratuita de [HackerTarget](https://hackertarget.com/http-header-check/), que impone una cuota chica **compartida por IP entre todos los visitantes**. Con uso moderado es fácil alcanzarla y recibir "HackerTarget alcanzó su cuota de consultas".
+
+Para no depender de esa cuota compartida, podés desplegar tu propio reemplazo pasivo bajo tu cuenta gratuita de Cloudflare Workers (100.000 requests/día, propios, sin compartir con nadie más):
+
+```sh
+npm install -g wrangler
+wrangler login
+cd worker && wrangler deploy
+```
+
+Esto te da una URL del tipo `https://php2shell-headers.<tu-cuenta>.workers.dev`. Pegala como valor de `SELF_HOSTED_ENDPOINT` al principio de `checker.js` y volvé a publicar la página: a partir de ahí, todas las consultas pasan por tu propio Worker en vez de por HackerTarget. El Worker (`worker/header-check.js`) hace exactamente la misma comprobación pasiva —mismo chequeo de dominio público, misma validación anti-SSRF, mismas cabeceras leídas— solo que corriendo bajo tu propia cuenta.
+
 ## Archivos
 
 - `index.html`: formulario y presentación accesible de resultados.
 - `checker.js`: validación, consulta pasiva y evaluación de cabeceras.
+- `worker/header-check.js`: endpoint propio opcional (Cloudflare Worker) para no depender de la cuota compartida de HackerTarget.
+- `worker/wrangler.toml`: configuración de despliegue del Worker.
 - `.nojekyll`: publicación estática sin procesamiento de Jekyll.
 
 La página compara versiones declaradas con los umbrales verificados. No certifica la seguridad general de los sitios, la ausencia de intrusiones ni la explotación de las vulnerabilidades.

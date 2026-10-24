@@ -1,0 +1,6 @@
+name = "php2shell-headers"
+main = "header-check.js"
+compatibility_date = "2026-10-24"
+
+# Capa gratuita de Cloudflare Workers: 100.000 requests/día, cuota propia
+# (no compartida con otros visitantes de la página, a diferencia de HackerTarget).
