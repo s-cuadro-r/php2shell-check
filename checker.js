@@ -6,7 +6,9 @@ const MAX_BYTES = 65536;
 /** Cabeceras públicas que delatan de forma fiable un WAF/CDN conocido delante del origen. */
 const EDGE_HEADER_PROVIDERS = Object.freeze({'cf-ray':'Cloudflare','cf-cache-status':'Cloudflare','x-sucuri-id':'Sucuri','x-sucuri-cache':'Sucuri','x-iinfo':'Imperva/Incapsula','x-amz-cf-id':'Amazon CloudFront','x-akamai-transformed':'Akamai','x-azure-ref':'Azure Front Door'});
 const SERVER_EDGE_SIGNATURES = Object.freeze([[/cloudflare/i,'Cloudflare'],[/akamaighost/i,'Akamai'],[/sucuri/i,'Sucuri'],[/imperva|incapsula/i,'Imperva/Incapsula'],[/cloudfront/i,'Amazon CloudFront'],[/\bfastly\b/i,'Fastly']]);
-const CAPTURED_HEADERS = new Set(['server','x-powered-by','location',...Object.keys(EDGE_HEADER_PROVIDERS)]);
+/** Cabeceras puramente informativas (plataforma/panel de hosting) que algunos proveedores agregan; no afectan el veredicto. */
+const INFO_HEADERS = ['server','platform','panel'];
+const CAPTURED_HEADERS = new Set(['server','x-powered-by','location',...INFO_HEADERS,...Object.keys(EDGE_HEADER_PROVIDERS)]);
 /**
  * URL de un endpoint propio de consulta pasiva de cabeceras (por ejemplo, el Worker
  * de Cloudflare en worker/header-check.js, desplegado bajo tu propia cuenta gratuita).
@@ -136,6 +138,8 @@ export function assessHeaders(domainInput, raw, initialEvidence=[], providerLabe
   const edgeProviders = edgeProvidersFrom(blocks);
   const evidence = [...initialEvidence,`Cabeceras públicas observadas a través de ${providerLabel}.`,`La respuesta final informada por el proveedor fue HTTP ${final.status}.`];
   if (edgeProviders.length) evidence.push(`Se observaron cabeceras asociadas a ${edgeProviders.join(', ')} en el camino de red; la respuesta pública puede corresponder a ese borde y no al servidor de origen.`);
+  const infoParts = INFO_HEADERS.flatMap(name => (final.headers[name] || []).slice(0,1).map(value => `${name}: ${value}`));
+  if (infoParts.length) evidence.push(`Información adicional declarada por el sitio (no forma parte del veredicto): ${infoParts.join(', ')}.`);
   let current = new URL('https://' + domain + '/');
   for (let i=0;i<blocks.length;i++) {
     const block = blocks[i];
