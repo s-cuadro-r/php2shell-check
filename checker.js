@@ -1,5 +1,15 @@
 /** Browser-only, passive assessment of public HTTP headers observed through HackerTarget. */
 export const FIXED_PATCHES = Object.freeze({'8.2':35,'8.3':36,'8.4':27,'8.5':12});
+/** Ramas con soporte de seguridad activo según php.net, ordenadas. Fuera de este rango, la rama es EOL (más baja) o aún no cubierta por el aviso (más alta). */
+const KNOWN_BRANCHES = Object.keys(FIXED_PATCHES).map(b => b.split('.').map(Number)).sort((a,b) => a[0]-b[0] || a[1]-b[1]);
+const MIN_KNOWN_BRANCH = KNOWN_BRANCHES[0];
+/**
+ * Mitigación parcial (no reemplaza el parche). Fuentes: PHP core dev Gina Peter Banyard
+ * ("the only mitigation is patching / upgrading PHP"); GMO Flatt Security revisó su postura
+ * inicial a "may help, but the attack is still possible". session.upload_progress.enabled=0
+ * cubre solo CVE-2026-109619 (no CVE-2026-109618, una ruta de agotamiento de memoria separada).
+ */
+const MITIGATION_PARTIAL = 'Mitigación parcial mientras actualizás (no reemplaza el parche, cubre solo algunos caminos de ataque, no deja el sitio seguro por sí sola): session.upload_progress.enabled=0 en php.ini o el pool de FPM —reiniciando los workers; no alcanza con ini_set() ni .user.ini— cubre únicamente CVE-2026-109619. Un memory_limit fijo no modificable por la aplicación y un post_max_size bajo ayudan contra CVE-2026-109618, la otra CVE. Según el propio equipo de PHP, la única mitigación real es aplicar el parche.';
 const RESERVED_ENDINGS = /\.(?:localhost|local|internal|intranet|lan|home|arpa|invalid|test|onion)$/i;
 const REDIRECTS = new Set([301,302,303,307,308]);
 const MAX_BYTES = 65536;
@@ -165,10 +175,17 @@ export function assessHeaders(domainInput, raw, initialEvidence=[], providerLabe
   const [major,minor,patch] = version.split('.').map(Number);
   const branch = `${major}.${minor}`;
   const fixedPatch = FIXED_PATCHES[branch];
-  if (fixedPatch === undefined) return unknown(domain,'La rama de PHP declarada no tiene un umbral de corrección verificado en esta herramienta.',evidence,final.status,version,edgeProviders);
+  if (fixedPatch === undefined) {
+    const isEolBranch = major < MIN_KNOWN_BRANCH[0] || (major === MIN_KNOWN_BRANCH[0] && minor < MIN_KNOWN_BRANCH[1]);
+    if (isEolBranch) {
+      evidence.push(`La rama PHP ${branch} ya no tiene soporte de seguridad activo (fin de vida confirmado en php.net); no existe para ella una versión numerada que incorpore el parche del 21 de octubre de 2026. PHP publicó parches fuente no oficiales para 7.4/8.0/8.1 (para compilaciones propias) y existen backports de distribuciones (Ubuntu, CloudLinux, TuxCare, sury.org) que pueden mantener el mismo número de versión visible: confirmá el changelog real del paquete instalado para ambas CVE antes de descartar este resultado.`);
+      return {status:'potentially_affected',domain,checkedAt:new Date().toISOString(),verdict:'Versión potencialmente afectada',summary:`El sitio declara PHP ${version}, de una rama sin soporte de seguridad activo. Sin una versión numerada corregida publicada por PHP.net para esta rama, se trata como potencialmente afectado salvo que el paquete real instalado incluya un backport confirmado de ambas CVE.`,evidence,phpVersion:version,httpStatus:final.status,url:current.href,recommendation:`Solución: migrá a una rama con soporte activo (PHP 8.2.35, 8.3.36, 8.4.27 u 8.5.12, o posterior) — es la corrección completa, ya que esta rama no la recibirá. ${MITIGATION_PARTIAL}` + edgeCaveat(edgeProviders)};
+    }
+    return unknown(domain,'La rama de PHP declarada es más nueva que las cubiertas por el aviso de seguridad disponible; no hay un umbral de corrección verificado en esta herramienta para ella.',evidence,final.status,version,edgeProviders);
+  }
   evidence.push(`Primera versión upstream corregida de esta rama: PHP ${branch}.${fixedPatch}.`);
   const affected = patch < fixedPatch;
-  const baseRecommendation = affected?'Actualizá a una versión corregida o comprobá el aviso de seguridad del proveedor para el paquete exacto instalado. Revisá todos los nodos y reiniciá los procesos PHP después de actualizar.':'Confirmá desde el servidor la versión o el parche del paquete y que todos los procesos PHP estén actualizados. Este resultado se limita a CVE-2026-109618 y CVE-2026-109619.';
+  const baseRecommendation = affected?`Solución: actualizá a PHP ${branch}.${fixedPatch} o posterior (o confirmá con tu proveedor que el paquete instalado ya incluye el parche del 21 de octubre de 2026 para ambas CVE). Revisá todos los nodos y reiniciá los procesos PHP después de actualizar. ${MITIGATION_PARTIAL}`:'Confirmá desde el servidor la versión o el parche del paquete y que todos los procesos PHP estén actualizados. Este resultado se limita a CVE-2026-109618 y CVE-2026-109619.';
   return {status:affected?'potentially_affected':'patched_declared',domain,checkedAt:new Date().toISOString(),verdict:affected?'Versión potencialmente afectada':'Versión corregida declarada',summary:affected?`El sitio declara PHP ${version}, anterior a la corrección de su rama. Algunos proveedores aplican parches sin cambiar la versión base; es necesario revisar el paquete instalado.`:`El sitio declara PHP ${version}, igual o posterior a la corrección de su rama. Las cabeceras informadas por un tercero no confirman qué binario se ejecuta ni certifican la seguridad del sitio.`,evidence,phpVersion:version,httpStatus:final.status,url:current.href,recommendation:baseRecommendation + edgeCaveat(edgeProviders)};
 }
 
