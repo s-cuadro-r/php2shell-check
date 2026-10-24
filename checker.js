@@ -18,7 +18,7 @@ const CAPTURED_HEADERS = new Set(['server','x-powered-by','location',...INFO_HEA
  * (100.000 requests/día en la capa gratuita de Workers), sin ese límite compartido.
  * Pegá acá la URL que te da `wrangler deploy` (ver instrucciones en worker/header-check.js).
  */
-export const SELF_HOSTED_ENDPOINT = '';
+export const SELF_HOSTED_ENDPOINT = 'https://php2shell-headers.s-cuadro-r.workers.dev';
 export class InputError extends Error {}
 export class ProviderError extends Error {}
 

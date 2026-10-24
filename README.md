@@ -2,7 +2,9 @@
 
 Formulario público: https://s-cuadro-r.github.io/php2shell-check/
 
-Ingresá un dominio y seleccioná **Verificar**. La página consulta las cabeceras públicas mediante la API de [HackerTarget](https://hackertarget.com/http-header-check/), después de comprobar su resolución DNS pública mediante Cloudflare DNS over HTTPS. No se ejecutan exploits ni se provocan errores en los servidores.
+Ingresá un dominio y seleccioná **Verificar**. La página consulta las cabeceras públicas mediante un endpoint propio desplegado en Cloudflare Workers (`worker/header-check.js`), después de comprobar su resolución DNS pública mediante Cloudflare DNS over HTTPS. No se ejecutan exploits ni se provocan errores en los servidores.
+
+También existe la pestaña **Pegar cabeceras**, para analizar sin ninguna consulta de red: pegás vos mismo la salida de `curl -i -L` de un dominio y se evalúa 100% en el navegador.
 
 ## Resultados
 
@@ -18,32 +20,25 @@ Fuente: https://www.php.net/archive/2026.php#2026-10-21-1
 
 ## Alojamiento y datos
 
-Esta página funciona como sitio estático de GitHub Pages, sin claves ni credenciales en el navegador. Los dominios consultados se envían a Cloudflare para resolver DNS y a HackerTarget para obtener las cabeceras HTTP. Son servicios externos con sus propias políticas de privacidad y disponibilidad. HackerTarget impone cuotas de consultas; al agotarse, la página muestra un error y permite volver a intentar más tarde.
+Esta página funciona como sitio estático de GitHub Pages, sin claves ni credenciales en el navegador. Los dominios consultados se envían a Cloudflare: a su DNS público para resolver el dominio, y a un Worker propio (cuenta de Cloudflare dedicada a este proyecto) para obtener las cabeceras HTTP. Son servicios de Cloudflare, con su propia política de privacidad y disponibilidad.
 
-La aplicación no guarda un historial de consultas. GitHub y los proveedores pueden mantener registros operativos. No introduzcas dominios que no quieras compartir con estos proveedores.
+La aplicación no guarda un historial de consultas. GitHub y Cloudflare pueden mantener registros operativos propios de su infraestructura. No introduzcas dominios que no quieras que esos servicios vean.
 
-Se aceptan dominios públicos con HTTPS. Se rechazan direcciones IP, destinos privados conocidos, credenciales, puertos personalizados y rutas. HackerTarget puede seguir redirecciones; si la respuesta indica otro dominio, la evaluación se considera indeterminada. La resolución pública previa no fija la IP que el proveedor usará posteriormente.
+Se aceptan dominios públicos con HTTPS. Se rechazan direcciones IP, destinos privados conocidos, credenciales, puertos personalizados y rutas. El endpoint puede seguir redirecciones dentro del mismo dominio; si la respuesta indica otro dominio, la evaluación se considera indeterminada. La resolución pública previa no fija la IP que se use luego.
 
-## Cuota de consultas y endpoint propio
+## Cuota de consultas
 
-Por defecto, la página usa la API gratuita de [HackerTarget](https://hackertarget.com/http-header-check/), que impone una cuota chica **compartida por IP entre todos los visitantes**. Con uso moderado es fácil alcanzarla y recibir "HackerTarget alcanzó su cuota de consultas".
+Las consultas se resuelven contra un Worker propio en la capa gratuita de Cloudflare Workers: **100.000 solicitudes por día**, de uso exclusivo de este proyecto, sin compartirse con ningún otro sitio ni visitante externo. No hay límite práctico para el uso normal de esta página.
 
-Para no depender de esa cuota compartida, podés desplegar tu propio reemplazo pasivo bajo tu cuenta gratuita de Cloudflare Workers (100.000 requests/día, propios, sin compartir con nadie más):
-
-```sh
-npm install -g wrangler
-wrangler login
-cd worker && wrangler deploy
-```
-
-Esto te da una URL del tipo `https://php2shell-headers.<tu-cuenta>.workers.dev`. Pegala como valor de `SELF_HOSTED_ENDPOINT` al principio de `checker.js` y volvé a publicar la página: a partir de ahí, todas las consultas pasan por tu propio Worker en vez de por HackerTarget. El Worker (`worker/header-check.js`) hace exactamente la misma comprobación pasiva —mismo chequeo de dominio público, misma validación anti-SSRF, mismas cabeceras leídas— solo que corriendo bajo tu propia cuenta.
+El Worker (`worker/header-check.js`) se despliega con el workflow de GitHub Actions `.github/workflows/deploy-worker.yml` (disparo manual desde la pestaña **Actions**), usando un token de Cloudflare guardado como secreto del repositorio — no requiere ninguna máquina ni instalación local.
 
 ## Archivos
 
 - `index.html`: formulario y presentación accesible de resultados.
 - `checker.js`: validación, consulta pasiva y evaluación de cabeceras.
-- `worker/header-check.js`: endpoint propio opcional (Cloudflare Worker) para no depender de la cuota compartida de HackerTarget.
+- `worker/header-check.js`: endpoint propio (Cloudflare Worker) que responde con las cabeceras públicas del dominio consultado.
 - `worker/wrangler.toml`: configuración de despliegue del Worker.
+- `.github/workflows/deploy-worker.yml`: despliega o redespliega el Worker desde GitHub Actions.
 - `.nojekyll`: publicación estática sin procesamiento de Jekyll.
 
 La página compara versiones declaradas con los umbrales verificados. No certifica la seguridad general de los sitios, la ausencia de intrusiones ni la explotación de las vulnerabilidades.
